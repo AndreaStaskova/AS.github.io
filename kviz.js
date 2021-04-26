@@ -2,6 +2,8 @@
 pole otázek
 možná změnit název key odpoved a nějak vyznačit, která je správná?
 */
+let content = document.querySelector(".obsah")
+let button = document.getElementById("startButton")
 let questionAnswer = [
     {
         question: "Jak se jmenuje postava vpravo?",
@@ -45,15 +47,59 @@ let questionAnswer = [
     }
 ];
 
-document.getElementById("start").addEventListener(click, play())
-let 
+button.addEventListener("click", play);
+ 
 
 function play() {
+    let quiz = document.createElement("div");
+    quiz.className = "kviz";
+    content.appendChild(quiz);
+    content.removeChild(button);
 
+    let order = document.createElement("div");
+    order.id = "poradi";
+    quiz.appendChild(order)
+
+    let question = document.createElement("h2");
+    question.id = "otazka";
+    quiz.appendChild(question);
+
+    let option = document.createElement("li");
+    option.id = "odpovedi";
+    quiz.appendChild(option);
+
+    let pictureDiv = document.createElement("div");
+    pictureDiv.className = "foto";
+    quiz.appendChild(pictureDiv);
+
+    let picture = document.createElement("img");
+    picture.id = "obrazek";
+    pictureDiv.appendChild(picture);
+    // možná ještě do divu s className foto?
+
+    for (let i = 0; i < questionAnswer.length; i++) {
+        let oneQuestion = questionAnswer[i];
+        let options = [oneQuestion.answer1, oneQuestion.answer2, oneQuestion.answer3, oneQuestion.answer4];
+        /*
+        options.forEach(element => {
+           
+            let option = document.createElement("li");
+            option.id = "odpovedi li";
+            option.innerHTML = element;
+            quiz.appendChild(option);
+        });
+         */
+    
+        question.innerHTML = oneQuestion.question;
+        picture.src = oneQuestion.photo;
+        option.innerHTML = oneQuestion.answer1, oneQuestion.answer2, oneQuestion.answer3, oneQuestion.answer4
+    }
 }
-let quiz = document.createElement("div");
-quiz.className = "kviz"
-//na začátku bude tlačítko start, pak se tepr objeví div kviz
+
+
+
+
+
 //text otázka s počítadlem postupu 1/5
 
 //otázky jsou postupně za sebou jak jsou v poli
