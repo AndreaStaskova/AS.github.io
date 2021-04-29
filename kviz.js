@@ -2,104 +2,122 @@
 pole otázek
 možná změnit název key odpoved a nějak vyznačit, která je správná?
 */
-let content = document.querySelector(".obsah")
-let button = document.getElementById("startButton")
+let content = document.querySelector(".obsah");
+let button = document.getElementById("startButton");
 let questionAnswer = [
     {
         question: "Jak se jmenuje postava vpravo?",
-        answer1: "Křemílek", //this
-        answer2: "Vochomůrka",
-        answer3: "Racochejl",
-        answer4: "Pizizubka",
+        options: ["Křemílek", "Vochomůrka", "Racochejl", "Pizizubka"],
+        correct: "Křemílek", 
         photo: "photos/postava.jpg"
     },
     {
         question: "Jak se jmenuje květina na obrázku?",
-        answer1: "Blatouch",
-        answer2: "Podléška",
-        answer3: "Hluchavka", //this
-        answer4: "Plicník",
+        options: ["Blatouch", "Podléška", "Hluchavka", "Plicník"], 
+        correct: "Hluchavka", 
         photo: "photos/kytka.jpg"
     },
     {
         question: "Co je na obrázku za auto?",
-        answer1: "Monteverdi Hai",
-        answer2: "DeTomaso Pantera", //this
-        answer3: "DeLorean",
-        answer4: "Toyota Celica",
+        options: ["Monteverdi Hai", "DeTomaso Pantera", "DeLorean", "Toyota Celica"],
+        correct: "DeTomaso Pantera", 
         photo: "photos/auto.jpg"
     },
     {
         question: "Co ucpalo hadici v dílu Krtek zahradníkem?",
-        answer1: "Žába", //this
-        answer2: "Míč",
-        answer3: "Rybička",
-        answer4: "Robot",
+        options: ["Žába", "Míč", "Rybička", "Robot"],
+        correct: "Žába", 
         photo: "photos/hadice.jpg"
     },
     {
         question: "Jak se jmenuje výrobce traktoru na obrázku?",
-        answer1: "Massey Ferguson",
-        answer2: "Zetor",
-        answer3: "Steyr",
-        answer4: "John Deere", //this
+        options: ["Massey Ferguson", "Zetor", "Steyr", "John Deere"],
+        correct: "John Deere",
         photo: "photos/traktor.jpg"
     }
 ];
+let index = 0;
 
-button.addEventListener("click", play);
- 
+let quiz = document.createElement("div");
+quiz.className = "kviz";
 
-function play() {
-    let quiz = document.createElement("div");
-    quiz.className = "kviz";
+let order = document.createElement("div");
+order.id = "poradi";
+
+let question = document.createElement("h2");
+question.id = "otazka";
+
+let optionDiv = document.createElement("div");
+optionDiv.id = "moznosti";
+
+let options = document.createElement("ul");
+options.id = "odpovedi";
+
+let pictureDiv = document.createElement("div");
+pictureDiv.className = "foto";
+
+let picture = document.createElement("img");
+picture.id = "obrazek";
+
+button.addEventListener("click", startPlay);
+
+
+
+function startPlay() {
+    let notPlayedYet = true;
+    if (notPlayedYet) {
+        content.removeChild(button);
+        
+        notPlayedYet = false;
+    }
+        
     content.appendChild(quiz);
-    content.removeChild(button);
+        
+    quiz.appendChild(order);
 
-    let order = document.createElement("div");
-    order.id = "poradi";
-    quiz.appendChild(order)
-
-    let question = document.createElement("h2");
-    question.id = "otazka";
     quiz.appendChild(question);
 
-    let option = document.createElement("li");
-    option.id = "odpovedi";
-    quiz.appendChild(option);
+    quiz.appendChild(optionDiv);
 
-    let pictureDiv = document.createElement("div");
-    pictureDiv.className = "foto";
+    optionDiv.appendChild(options);
+
     quiz.appendChild(pictureDiv);
 
-    let picture = document.createElement("img");
-    picture.id = "obrazek";
     pictureDiv.appendChild(picture);
-    // možná ještě do divu s className foto?
-
-    for (let i = 0; i < questionAnswer.length; i++) {
-        let oneQuestion = questionAnswer[i];
-        let options = [oneQuestion.answer1, oneQuestion.answer2, oneQuestion.answer3, oneQuestion.answer4];
-        /*
-        options.forEach(element => {
-           
-            let option = document.createElement("li");
-            option.id = "odpovedi li";
-            option.innerHTML = element;
-            quiz.appendChild(option);
-        });
-         */
-    
-        question.innerHTML = oneQuestion.question;
-        picture.src = oneQuestion.photo;
-        option.innerHTML = oneQuestion.answer1, oneQuestion.answer2, oneQuestion.answer3, oneQuestion.answer4
-    }
+    askQuestions(index);
 }
 
+function askQuestions(index) {
+    let oneQuestion = questionAnswer[index];
+    let optionsForOne = oneQuestion.options;
+    //console.log(optionsForOne);
 
-
-
-
+    optionsForOne.forEach(element => {
+        
+        let answer = document.createElement("li");
+        answer.id = "odpovedi li";
+        answer.innerHTML = element;
+        options.appendChild(answer);
+        question.innerHTML = oneQuestion.question;
+        picture.src = oneQuestion.photo;
+        
+    });
+        
+        
+    options.addEventListener("click", (event) => {
+        let answered = event.target.innerHTML;
+        console.log(event.target.innerHTML);
+        if (answered == oneQuestion.correct) {
+            console.log("Congrats"); 
+            index++;               
+        } else {
+            index++;
+        };
+    });
+    index++;
+    
+    startPlay();
+}
 //text otázka s počítadlem postupu 1/5
 
 //otázky jsou postupně za sebou jak jsou v poli
