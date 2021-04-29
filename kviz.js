@@ -37,6 +37,7 @@ let questionAnswer = [
     }
 ];
 let index = 0;
+let answer;
 
 let quiz = document.createElement("div");
 quiz.className = "kviz";
@@ -61,20 +62,16 @@ picture.id = "obrazek";
 
 button.addEventListener("click", startPlay);
 
-
-
 function startPlay() {
-    let notPlayedYet = true;
-    if (notPlayedYet) {
-        content.removeChild(button);
-        
-        notPlayedYet = false;
-    }
-        
+    content.removeChild(button);
     content.appendChild(quiz);
         
-    quiz.appendChild(order);
+    prepareQuestion();         
+}
 
+function prepareQuestion() {
+    quiz.appendChild(order);
+    
     quiz.appendChild(question);
 
     quiz.appendChild(optionDiv);
@@ -84,17 +81,18 @@ function startPlay() {
     quiz.appendChild(pictureDiv);
 
     pictureDiv.appendChild(picture);
-    askQuestions(index);
+    
+    displayQuestion(index);
 }
-
-function askQuestions(index) {
+    
+function displayQuestion(index) {
     let oneQuestion = questionAnswer[index];
     let optionsForOne = oneQuestion.options;
     //console.log(optionsForOne);
 
     optionsForOne.forEach(element => {
         
-        let answer = document.createElement("li");
+        answer = document.createElement("li");
         answer.id = "odpovedi li";
         answer.innerHTML = element;
         options.appendChild(answer);
@@ -102,21 +100,26 @@ function askQuestions(index) {
         picture.src = oneQuestion.photo;
         
     });
-        
-        
-    options.addEventListener("click", (event) => {
-        let answered = event.target.innerHTML;
-        console.log(event.target.innerHTML);
-        if (answered == oneQuestion.correct) {
-            console.log("Congrats"); 
-            index++;               
-        } else {
-            index++;
-        };
-    });
+
+    options.addEventListener("click", nextQuestion);    
+}
+
+/*
+if (answered == oneQuestion.correct) {
+    console.log("Congrats"); 
+    index++;               
+} else {
     index++;
+};
+*/
     
-    startPlay();
+function nextQuestion(event) {
+    let answered = event.target.innerHTML;
+    console.log(answered);
+    options.innerHTML = " "
+    index++;       
+    
+    displayQuestion(index);    
 }
 //text otázka s počítadlem postupu 1/5
 
