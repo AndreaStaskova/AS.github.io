@@ -4,6 +4,21 @@ možná změnit název key odpoved a nějak vyznačit, která je správná?
 */
 let content = document.querySelector(".obsah");
 let button = document.getElementById("startButton");
+let quiz = document.createElement("div");
+let order = document.createElement("div");
+let question = document.createElement("h2");
+let optionDiv = document.createElement("div");
+let options = document.createElement("ul");
+let pictureDiv = document.createElement("div");
+let picture = document.createElement("img");
+let evaluation = document.createElement("div");
+let countQuestions;
+let questionNr;
+let listCorrectAnsw = [];
+let listUserAnswered = [];
+let countCorrectAnsw = 0;
+let index;
+let answer;
 let questionAnswer = [
     {
         question: "Jak se jmenuje postava vpravo?",
@@ -36,59 +51,40 @@ let questionAnswer = [
         photo: "photos/traktor.jpg"
     }
 ];
-let index = 0;
-let answer;
-
-let quiz = document.createElement("div");
-quiz.className = "kviz";
-
-let order = document.createElement("div");
-order.id = "poradi";
-
-let question = document.createElement("h2");
-question.id = "otazka";
-
-let optionDiv = document.createElement("div");
-optionDiv.id = "moznosti";
-
-let options = document.createElement("ul");
-options.id = "odpovedi";
-
-let pictureDiv = document.createElement("div");
-pictureDiv.className = "foto";
-
-let picture = document.createElement("img");
-picture.id = "obrazek";
 
 button.addEventListener("click", startPlay);
 
+/** This function is to prepare HTML for displayQuestion function */
 function startPlay() {
     content.removeChild(button);
+
+    quiz.className = "kviz";
     content.appendChild(quiz);
-        
-    prepareQuestion();         
-}
-
-function prepareQuestion() {
+    order.id = "poradi";
     quiz.appendChild(order);
-    
+    question.id = "otazka";
     quiz.appendChild(question);
-
+    optionDiv.id = "moznosti";
     quiz.appendChild(optionDiv);
-
+    options.id = "odpovedi";
     optionDiv.appendChild(options);
-
+    pictureDiv.className = "foto";
     quiz.appendChild(pictureDiv);
-
+    picture.id = "obrazek";
     pictureDiv.appendChild(picture);
-    
-    displayQuestion(index);
+
+    index = 0;    
+    displayQuestion(index);     
 }
-    
-function displayQuestion(index) {
-    let oneQuestion = questionAnswer[index];
+ 
+/** This one loops through the array of object (questionAnswer) and displays one question at time, adding eventlistener to display next question */
+function displayQuestion(ind) {
+    let oneQuestion = questionAnswer[ind];
     let optionsForOne = oneQuestion.options;
-    //console.log(optionsForOne);
+    let correct = oneQuestion.correct;
+    listCorrectAnsw.push(correct);
+    questionNr = ind + 1;
+    countQuestions = questionAnswer.length;
 
     optionsForOne.forEach(element => {
         
@@ -98,36 +94,73 @@ function displayQuestion(index) {
         options.appendChild(answer);
         question.innerHTML = oneQuestion.question;
         picture.src = oneQuestion.photo;
-        
+        order.innerHTML = "Otázka " + questionNr + "/" + countQuestions
     });
 
     options.addEventListener("click", nextQuestion);    
 }
 
-/*
-if (answered == oneQuestion.correct) {
-    console.log("Congrats"); 
-    index++;               
-} else {
-    index++;
-};
-*/
-    
+/** This one checks for answers and displays next question by changing index, until the end of the array */    
 function nextQuestion(event) {
     let answered = event.target.innerHTML;
-    console.log(answered);
-    options.innerHTML = " "
-    index++;       
+    if (index < (questionAnswer.length - 1)) {
+        listUserAnswered.push(answered);
     
-    displayQuestion(index);    
+        if (answered == listCorrectAnsw[index]) {
+            countCorrectAnsw++;
+        };
+        
+        index++;  
+        options.innerHTML = " ";  
+        displayQuestion(index);   
+    } else {
+        listUserAnswered.push(answered);
+        displayEvaluation();
+    }     
 }
-//text otázka s počítadlem postupu 1/5
 
-//otázky jsou postupně za sebou jak jsou v poli
-//možné odpovědi jako list, jsou řadit náhodně?
+function displayEvaluation() {
+    content.removeChild(quiz);
+    evaluation.className = "vysledek";
+    content.appendChild(evaluation);
+    let evaluationHeading = document.createElement("h2");
+    evaluation.appendChild(evaluationHeading);
+    evaluation.style.display = "block";
+    evaluationHeading.innerHTML = "Tvoje hodnocení";
+    
+    let allEvaluated = document.createElement("ol");
+    //allEvaluated.type = "1"
+    evaluation.appendChild(allEvaluated);
+    
 
-//obrázek
+    for (i = 0; i < (questionAnswer.length); i++) {
+        let questionEvaluatedOrder = document.createElement("dt");
+        allEvaluated.appendChild(questionEvaluatedOrder);
+        let questionEvaluated = document.createElement("h3");
+        
+        questionEvaluatedOrder.appendChild(questionEvaluated);
+        questionEvaluated.innerHTML = questionAnswer[i].question;
+        if (listCorrectAnsw[i] == listUserAnswered[i]) {
+            let evaluationText = document.createElement("dd");
+            allEvaluated.appendChild(evaluationText);
+            evaluationText.innerText = "Tvoje odpověď byla " + listUserAnswered[i] + ". \nTo je správně";
+        } else {
+            let evaluationText = document.createElement("dd");
+            allEvaluated.appendChild(evaluationText);
+            evaluationText.innerText = "Tvoje odpověď byla " + listUserAnswered[i] + ". \nSprávná odpověď byla " + listCorrectAnsw[i];
+        }
+    }
 
-//možnosti - tlačítka
+    let successRate = countCorrectAnsw / listCorrectAnsw.length * 100;
+    let summary = document.createElement("h2");
+    evaluation.appendChild(summary);
+    summary.innerHTML = "Máš správně " + countCorrectAnsw + " otázky z " + listCorrectAnsw.length + ". Tvoje úspěšnost je " + successRate +" %";
+}
+
+//obrázek vlevo vedle otázky
 
 //vyhodnocení
+//číslování otázek <ol> vs <dl>
+//přidat shrnující text úspěšnosti
+
+//refactor

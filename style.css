@@ -132,3 +132,7 @@ h1 {
 	font-size: 36px;
 	color: var(--modra);
 }
+
+dd {
+	margin: 0;
+}
