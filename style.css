@@ -84,6 +84,7 @@ h1 {
 .foto {
 	width: 250px;
 	margin-right: 30px;
+	position: relative;
 }
 
 #obrazek {
@@ -92,10 +93,18 @@ h1 {
 	height: auto;
 	border-radius: 50%;
 	border: 3px dotted var(--modra);
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 
 #moznosti {
 	flex: 1;
+	display: flex;
 }
 
 #odpovedi {
@@ -103,6 +112,7 @@ h1 {
 	padding: 0;
 	font-size: 24px;
 	list-style: none;
+	
 	
 }
 
@@ -113,6 +123,7 @@ h1 {
 	border-radius: 100px;
 	transition: all 0.2s;
 	transform: translateX(0);
+	width: 400px;
 }
 
 #odpovedi li:hover {
