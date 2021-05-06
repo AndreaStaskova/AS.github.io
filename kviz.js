@@ -1,7 +1,4 @@
-/*
-pole otázek
-možná změnit název key odpoved a nějak vyznačit, která je správná?
-*/
+
 let content = document.querySelector(".obsah");
 let button = document.getElementById("startButton");
 let quiz = document.createElement("div");
@@ -12,6 +9,7 @@ let options = document.createElement("ul");
 let pictureDiv = document.createElement("div");
 let picture = document.createElement("img");
 let evaluation = document.createElement("div");
+let evaluationHeading = document.createElement("h2");
 let countQuestions;
 let questionNr;
 let listCorrectAnsw = [];
@@ -54,7 +52,7 @@ let questionAnswer = [
 
 button.addEventListener("click", startPlay);
 
-/** This function is to prepare HTML for displayQuestion function */
+/** This function is to remove startButton and prepare HTML for displayQuestion function */
 function startPlay() {
     content.removeChild(button);
 
@@ -66,12 +64,12 @@ function startPlay() {
     quiz.appendChild(question);
     optionDiv.id = "moznosti";
     quiz.appendChild(optionDiv);
-    options.id = "odpovedi";
-    optionDiv.appendChild(options);
     pictureDiv.className = "foto";
-    quiz.appendChild(pictureDiv);
+    optionDiv.appendChild(pictureDiv);
     picture.id = "obrazek";
     pictureDiv.appendChild(picture);
+    options.id = "odpovedi";
+    optionDiv.appendChild(options);
 
     index = 0;    
     displayQuestion(index);     
@@ -94,22 +92,19 @@ function displayQuestion(ind) {
         options.appendChild(answer);
         question.innerHTML = oneQuestion.question;
         picture.src = oneQuestion.photo;
-        order.innerHTML = "Otázka " + questionNr + "/" + countQuestions
-    });
-
-    options.addEventListener("click", nextQuestion);    
+        order.innerHTML = "Otázka " + questionNr + "/" + countQuestions;
+        answer.addEventListener("click", nextQuestion);
+    });      
 }
 
 /** This one checks for answers and displays next question by changing index, until the end of the array */    
 function nextQuestion(event) {
     let answered = event.target.innerHTML;
+    if (answered == listCorrectAnsw[index]) {
+        countCorrectAnsw++;
+    };
     if (index < (questionAnswer.length - 1)) {
-        listUserAnswered.push(answered);
-    
-        if (answered == listCorrectAnsw[index]) {
-            countCorrectAnsw++;
-        };
-        
+        listUserAnswered.push(answered);        
         index++;  
         options.innerHTML = " ";  
         displayQuestion(index);   
@@ -123,9 +118,8 @@ function displayEvaluation() {
     content.removeChild(quiz);
     evaluation.className = "vysledek";
     content.appendChild(evaluation);
-    let evaluationHeading = document.createElement("h2");
-    evaluation.appendChild(evaluationHeading);
     evaluation.style.display = "block";
+    evaluation.appendChild(evaluationHeading);
     evaluationHeading.innerHTML = "Tvoje hodnocení";
     
     let allEvaluated = document.createElement("ol");
@@ -154,13 +148,16 @@ function displayEvaluation() {
     let successRate = countCorrectAnsw / listCorrectAnsw.length * 100;
     let summary = document.createElement("h2");
     evaluation.appendChild(summary);
-    summary.innerHTML = "Máš správně " + countCorrectAnsw + " otázky z " + listCorrectAnsw.length + ". Tvoje úspěšnost je " + successRate +" %";
+    summary.innerHTML = "Máš správně " + countCorrectAnsw + " z " + listCorrectAnsw.length + " otázek. Tvoje úspěšnost je " + successRate +" %";
 }
 
 //obrázek vlevo vedle otázky
 
+
 //vyhodnocení
+
 //číslování otázek <ol> vs <dl>
-//přidat shrnující text úspěšnosti
+
+//css úprava
 
 //refactor
