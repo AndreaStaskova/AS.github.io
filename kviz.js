@@ -121,17 +121,15 @@ function displayEvaluation() {
     evaluation.style.display = "block";
     evaluation.appendChild(evaluationHeading);
     evaluationHeading.innerHTML = "Tvoje hodnocení";
-    
     let allEvaluated = document.createElement("ol");
-    //allEvaluated.type = "1"
+    allEvaluated.id = "hodnoceni";
     evaluation.appendChild(allEvaluated);
     
 
     for (i = 0; i < (questionAnswer.length); i++) {
-        let questionEvaluatedOrder = document.createElement("dt");
+        let questionEvaluatedOrder = document.createElement("li");
         allEvaluated.appendChild(questionEvaluatedOrder);
         let questionEvaluated = document.createElement("h3");
-        
         questionEvaluatedOrder.appendChild(questionEvaluated);
         questionEvaluated.innerHTML = questionAnswer[i].question;
         if (listCorrectAnsw[i] == listUserAnswered[i]) {
@@ -151,13 +149,5 @@ function displayEvaluation() {
     summary.innerHTML = "Máš správně " + countCorrectAnsw + " z " + listCorrectAnsw.length + " otázek. Tvoje úspěšnost je " + successRate +" %";
 }
 
-//obrázek vlevo vedle otázky
-
-
-//vyhodnocení
-
-//číslování otázek <ol> vs <dl>
-
 //css úprava
-
-//refactor
+//css mi dalo na závěr dost zabrat, hlavně proto, že se v něm moc nevyznám, takže jsou tam možná celkem prasárny

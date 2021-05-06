@@ -112,8 +112,6 @@ h1 {
 	padding: 0;
 	font-size: 24px;
 	list-style: none;
-	
-	
 }
 
 #odpovedi li {
@@ -146,4 +144,10 @@ h1 {
 
 dd {
 	margin: 0;
+	font-family: 'Nunito', sans-serif;
+}
+
+#hodnoceni {
+	font-family: 'Bangers', cursive;
+	font-weight: normal;
 }
