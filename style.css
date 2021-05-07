@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Bangers&subset=latin-ext');
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,400i,700,700i&subset=latin-ext');
 
-/* nastaveni barev */
+/* v CSS se až tak moc nevyznám, tak jsem se s tím trochu prala a možná jsou tu prasárny */
 :root {
 	--modra: #00c0f0;
 	--zelena: #7cffe9;
@@ -130,7 +130,6 @@ h1 {
 	cursor: pointer;
 	transform: translateX(-10px);
 }
-
 
 .vysledek {
 	display: none;

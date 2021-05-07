@@ -10,13 +10,14 @@ let pictureDiv = document.createElement("div");
 let picture = document.createElement("img");
 let evaluation = document.createElement("div");
 let evaluationHeading = document.createElement("h2");
-let countQuestions;
-let questionNr;
-let listCorrectAnsw = [];
-let listUserAnswered = [];
+let allEvaluated = document.createElement("ol");
+let numOfQuestions;
+let orderOfQuestion;
+let correctAnswList = [];
+let userAnsweredList = [];
 let countCorrectAnsw = 0;
-let index;
-let answer;
+let index = 0;
+let oneOption;
 let questionAnswer = [
     {
         question: "Jak se jmenuje postava vpravo?",
@@ -70,50 +71,51 @@ function startPlay() {
     pictureDiv.appendChild(picture);
     options.id = "odpovedi";
     optionDiv.appendChild(options);
-
-    index = 0;    
+  
     displayQuestion(index);     
 }
  
-/** This one loops through the array of object (questionAnswer) and displays one question at time, adding eventlistener to display next question */
+/** This one loops through the array of object (questionAnswer) and displays one question at time, adding eventListener to display nextQuestion */
 function displayQuestion(ind) {
     let oneQuestion = questionAnswer[ind];
     let optionsForOne = oneQuestion.options;
     let correct = oneQuestion.correct;
-    listCorrectAnsw.push(correct);
-    questionNr = ind + 1;
-    countQuestions = questionAnswer.length;
+    correctAnswList.push(correct);
+    orderOfQuestion = ind + 1;
+    numOfQuestions = questionAnswer.length;
 
     optionsForOne.forEach(element => {
-        
-        answer = document.createElement("li");
-        answer.id = "odpovedi li";
-        answer.innerHTML = element;
-        options.appendChild(answer);
         question.innerHTML = oneQuestion.question;
         picture.src = oneQuestion.photo;
-        order.innerHTML = "Otázka " + questionNr + "/" + countQuestions;
-        answer.addEventListener("click", nextQuestion);
+        order.innerHTML = "Otázka " + orderOfQuestion + "/" + numOfQuestions;
+
+        oneOption = document.createElement("li");
+        oneOption.id = "odpovedi li";
+        oneOption.innerHTML = element;
+        options.appendChild(oneOption);
+        oneOption.addEventListener("click", nextQuestion);       
     });      
 }
 
-/** This one checks for answers and displays next question by changing index, until the end of the array */    
+/** This one checks for correct answers and displays next question by changing index, until the end of the array */    
 function nextQuestion(event) {
     let answered = event.target.innerHTML;
-    if (answered == listCorrectAnsw[index]) {
+    if (answered == correctAnswList[index]) {
         countCorrectAnsw++;
     };
+    
     if (index < (questionAnswer.length - 1)) {
-        listUserAnswered.push(answered);        
+        userAnsweredList.push(answered);        
         index++;  
         options.innerHTML = " ";  
         displayQuestion(index);   
     } else {
-        listUserAnswered.push(answered);
+        userAnsweredList.push(answered);
         displayEvaluation();
     }     
 }
 
+/**This removes quiz content and displays user answers with correct answers in a list. Also calculates the success rate */
 function displayEvaluation() {
     content.removeChild(quiz);
     evaluation.className = "vysledek";
@@ -121,33 +123,26 @@ function displayEvaluation() {
     evaluation.style.display = "block";
     evaluation.appendChild(evaluationHeading);
     evaluationHeading.innerHTML = "Tvoje hodnocení";
-    let allEvaluated = document.createElement("ol");
     allEvaluated.id = "hodnoceni";
     evaluation.appendChild(allEvaluated);
     
-
     for (i = 0; i < (questionAnswer.length); i++) {
         let questionEvaluatedOrder = document.createElement("li");
         allEvaluated.appendChild(questionEvaluatedOrder);
         let questionEvaluated = document.createElement("h3");
         questionEvaluatedOrder.appendChild(questionEvaluated);
         questionEvaluated.innerHTML = questionAnswer[i].question;
-        if (listCorrectAnsw[i] == listUserAnswered[i]) {
-            let evaluationText = document.createElement("dd");
-            allEvaluated.appendChild(evaluationText);
-            evaluationText.innerText = "Tvoje odpověď byla " + listUserAnswered[i] + ". \nTo je správně";
+        let evaluationText = document.createElement("dd");
+        allEvaluated.appendChild(evaluationText);
+        if (correctAnswList[i] == userAnsweredList[i]) {
+            evaluationText.innerText = "Tvoje odpověď byla " + userAnsweredList[i] + ". \nTo je správně.";
         } else {
-            let evaluationText = document.createElement("dd");
-            allEvaluated.appendChild(evaluationText);
-            evaluationText.innerText = "Tvoje odpověď byla " + listUserAnswered[i] + ". \nSprávná odpověď byla " + listCorrectAnsw[i];
+            evaluationText.innerText = "Tvoje odpověď byla " + userAnsweredList[i] + ". \nSprávná odpověď je " + correctAnswList[i] + ".";
         }
     }
 
-    let successRate = countCorrectAnsw / listCorrectAnsw.length * 100;
+    let successRate = countCorrectAnsw / correctAnswList.length * 100;
     let summary = document.createElement("h2");
     evaluation.appendChild(summary);
-    summary.innerHTML = "Máš správně " + countCorrectAnsw + " z " + listCorrectAnsw.length + " otázek. Tvoje úspěšnost je " + successRate +" %";
+    summary.innerHTML = "Máš správně " + countCorrectAnsw + " z " + correctAnswList.length + " otázek. Tvoje úspěšnost je " + successRate +" %";
 }
-
-//css úprava
-//css mi dalo na závěr dost zabrat, hlavně proto, že se v něm moc nevyznám, takže jsou tam možná celkem prasárny
